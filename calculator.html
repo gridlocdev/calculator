@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Calculator</title>
+<link rel="stylesheet" href="./w3.css">
+
+<style>	
+
+@media only screen and (max-width: 700px) {
+  body {
+    zoom: 0.8;
+  }
+
+  #calculatorContainer
+  {
+  	font-size:12px;
+  	width: 100%;
+  	height: 100%;
+  }  
+  #calcTextBox
+  {
+  	width: 90%;
+  }
+
+  .w3-button{
+  	padding:2%;
+  }
+}
+
+</style>
+
+</head>
+<body>
+	<h1>Calculator Application</h1>
+	<div id="calculatorContainer" class="w3-display-middle w3-green w3-padding w3-mobile" style="zoom:3.0">	
+			
+<!-- 		a sign that appears next to the inputs, to confirm the user's choice of sign
+ -->		<span id = "signText" class="w3-display-topright w3-padding"></span>
+		
+		<input id="calcTextBox"class="w3-round w3-margin-right " type="text" placeholder="e.g. 1234..." ><br><br>
+
+		
+
+<div class="w3-cell-row">
+
+	
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="clearPress()">Clr</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="deletePress()">Del</div>
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="operationSelect(this)">&#43;</div>
+
+</div>
+<div class="w3-cell-row">
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">7</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">8</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">9</div>
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="operationSelect(this)">&#8722;</div>
+
+</div>
+<div class="w3-cell-row">
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">4</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">5</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">6</div>
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="operationSelect(this)">&#215;</div>
+
+</div>
+<div class="w3-cell-row">
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">1</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">2</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">3</div>
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="operationSelect(this)">&#247;</div>
+
+</div>
+<div class="w3-cell-row">
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="signChangePress()">&#177;</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="numberPress(this)">0</div>
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="decimalPress(this)">.</div>
+<!-- 	When the decimal is pressed: 
+If decimal exists in textbox: nothing
+If decimal does not exist in textbox: numberPress -->
+
+	<div class="w3-button w3-container w3-white w3-border w3-cell w3-round " onclick="equalPress(this)">&#61;</div>
+
+</div>
+
+
+</div>
+
+<script>
+	var total = 0;
+	var num2 = 0;
+	// global variable to show what operation is being done
+	var sign = "";
+	var sign1 = ""; // variables to store previous operation, so that users can equate without pressing ""
+	var sign2 = "";
+
+	// Toggle variable to say whether there is a number already in the text box
+	var numberWaiting = false;
+
+	// toggle variable to say whether this is the first number inputted or not: used for setting the text vs number operations
+	var firstNum = true;
+
+
+
+
+	function numberPress(buttonElement)
+	{
+		if (numberWaiting == true)
+		{
+			clearTextBox();
+			numberWaiting = false;
+		}
+		
+			var tempText = document.getElementById("calcTextBox").value.toString();
+			// Grabs the text from the element it's passed (number from the button's text) and adds it to the textbox
+			// console.log(buttonElement.innerHTML);
+			if (buttonElement.innerHTML == "0" && tempText.length == 0)
+			{// The number should start with one that's not 0
+	}
+			else{
+			document.getElementById("calcTextBox").value += buttonElement.innerHTML;
+			}
+	}
+
+	function signChangePress()
+	{
+		
+		if (document.getElementById("calcTextBox").value.indexOf("-") > -1)
+		{
+			var tempText = document.getElementById("calcTextBox").value.toString();
+			tempText = tempText.substr(1);
+
+			document.getElementById("calcTextBox").value = tempText;
+		}
+		else
+		{
+			document.getElementById("calcTextBox").value = "-" + document.getElementById("calcTextBox").value;
+		}
+	}
+
+	function deletePress()
+		{
+			var tempText = document.getElementById("calcTextBox").value.toString();
+			tempText = tempText.slice(0,-1);
+
+			document.getElementById("calcTextBox").value = tempText;
+		}
+
+
+	function clearTextBox()
+		{
+			var tempText = document.getElementById("calcTextBox").value.toString();
+			tempText = "";
+
+			document.getElementById("calcTextBox").value = tempText;
+		}
+
+	function clearPress()
+	{
+		clearTextBox()
+
+		sign = "";
+		sign1 = "";
+		sign2 = "";
+		total = 0;
+		num2 = 0;
+
+		firstNum = true;
+		numberWaiting = true;
+
+	}
+
+	function decimalPress(buttonElement)
+		{
+			//Check if anything else than a - has been inputted yet, if not, put a 0 at the start
+
+			var tempText = document.getElementById("calcTextBox").value;
+			if (numberWaiting == true)
+			{
+				clearTextBox();
+				numberWaiting = false;
+		
+				console.log("new 0 inputted!!!!")
+				document.getElementById("calcTextBox").value += 0 + ".";	
+
+			}
+			else if (tempText.length == 0) 
+			{
+				console.log("0!!!!")
+			document.getElementById("calcTextBox").value += 0 + "." + tempText;	
+			}
+			else if (tempText.indexOf("-") > -1 && tempText.length == 1) 
+			{
+				console.log("MINUS!!!!")
+				document.getElementById("calcTextBox").value += 0 + ".";	
+			}
+			else if (tempText.indexOf(".") > -1)
+			{
+				// do nothing, we don't want multiple decimal points
+			}
+			else{
+				document.getElementById("calcTextBox").value += buttonElement.innerHTML;
+			}
+
+		}
+
+		function operationSelect(buttonElement)
+		{
+
+
+			if (document.getElementById("calcTextBox").value != "")
+			{
+			sign1 = sign;
+			if (buttonElement != null) //handles error for pressing = without any numbers yet
+			{
+			sign = buttonElement.innerHTML;
+			}
+
+			sign2 = sign;
+			// Check for sign change, and if there is one postpone that change to the end of the function
+			if (sign1 != sign2 && sign1 != "")
+			{
+				console.log("signChange:" + sign1, sign2)
+				sign = sign1;
+			}
+
+
+			switch(sign)
+			{
+				case "+":
+				// First it changes the symbol on screen to let the user know which operation they're doing
+					document.getElementById("signText").innerHTML = sign;
+
+					// Then, it takes the value from the textbox and places it into num2
+					num2 = parseFloat(document.getElementById("calcTextBox").value);
+						console.log("Precalc:" + total, num2)
+
+					// Once it's in num2 (the variable that stores the number modifying the total) then it get the operation performed on it
+
+					if(firstNum == true)
+					{
+					
+					total = num2;
+					document.getElementById("calcTextBox").value = total;
+						firstNum = false;
+					}
+					else
+					{
+						total += num2;
+					document.getElementById("calcTextBox").value = total;
+					}
+					console.log("Postcalc:" + total, num2)
+					numberWaiting = true;
+					break;		
+
+				case "−":
+					// First it changes the symbol on screen to let the user know which operation they're doing
+					document.getElementById("signText").innerHTML = sign;
+
+					// Then, it takes the value from the textbox and places it into num2
+					num2 = parseFloat(document.getElementById("calcTextBox").value);
+						console.log("Precalc:" + total, num2)
+
+					// Once it's in num2 (the variable that stores the number modifying the total) then it get the operation performed on it
+
+					// if this is the first number
+					if(firstNum == true)
+					{
+					
+					total = num2;
+					document.getElementById("calcTextBox").value = total;
+						firstNum = false;
+					}
+					else
+					{
+						total -= num2;
+					document.getElementById("calcTextBox").value = total;
+					}
+					console.log("Postcalc:" + total, num2)
+					numberWaiting = true;
+					break;
+				
+				case "×":
+				
+					// First it changes the symbol on screen to let the user know which operation they're doing
+					document.getElementById("signText").innerHTML = sign;
+
+					// Then, it takes the value from the textbox and places it into num2
+					num2 = parseFloat(document.getElementById("calcTextBox").value);
+						console.log("Precalc:" + total, num2)
+
+					// Once it's in num2 (the variable that stores the number modifying the total) then it get the operation performed on it
+
+					if(firstNum == true)
+					{
+					
+					total = num2;
+					document.getElementById("calcTextBox").value = total;
+						firstNum = false;
+					}
+					else
+					{
+						total *= num2;
+					document.getElementById("calcTextBox").value = total;
+					}
+					console.log("Postcalc:" + total, num2)
+					numberWaiting = true;
+					break;		
+
+				case "÷":
+
+					// First it changes the symbol on screen to let the user know which operation they're doing
+					document.getElementById("signText").innerHTML = sign;
+
+					// Then, it takes the value from the textbox and places it into num2
+					num2 = parseFloat(document.getElementById("calcTextBox").value);
+						console.log("Precalc:" + total, num2)
+
+					// Once it's in num2 (the variable that stores the number modifying the total) then it get the operation performed on it
+
+					if(firstNum == true)
+					{
+					
+					total = num2;
+					document.getElementById("calcTextBox").value = total;
+						firstNum = false;
+					}
+					else
+					{
+						total /= num2;
+					document.getElementById("calcTextBox").value = total;
+					}
+					console.log("Postcalc:" + total, num2)
+					numberWaiting = true;
+					break;
+			}
+			}
+			sign = sign2
+		}
+
+// inputs number.
+// On clicking the addition sign, set the text equal to number + number 2
+// if num2 is not 0, then do equals method on operations
+// if 
+
+
+		function equalPress(buttonContent)
+		{
+			if (firstNum == true && num2 == 0)
+			{
+
+			}
+			else
+			{
+			operationSelect()
+			document.getElementById("signText").innerHTML = "";
+			numberWaiting = false;
+			console.log(total, num2)
+			document.getElementById("calcTextBox").value = total;
+			firstNum = true;
+			}
+		}
+
+
+</script>
+
+</body>
+</html>
